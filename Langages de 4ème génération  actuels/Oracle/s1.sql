@@ -27,9 +27,7 @@ declare
    v_nom    "ITEAM".etudiant.nom%type;
    v_prenom "ITEAM".etudiant.prenom%type;
 begin
-   select nom,
-          prenom
-     into
+   select nom,prenom into
       v_nom,
       v_prenom
      from "ITEAM".etudiant
@@ -69,8 +67,8 @@ insert into etudiant (
    "PRENOM"
 ) values
    ( 2,
-     'Durand',
-     'Marie' );
+   'Durand',
+   'Marie' );
 
 declare
    c_seuil    constant number(
@@ -84,9 +82,9 @@ declare
    v_nom      etudiant.nom%type;
 begin
    select *
-     into v_etu
-     from etudiant
-    where id = 2;
+   into v_etu
+   from etudiant
+   where id = 2;
    dbms_output.put_line(v_etu.id
                         || ' '
                         || v_etu.prenom
@@ -102,18 +100,18 @@ CREATE TABLE "ITEAM"."NOTE"
 	"ID_ELEVE" NUMBER DEFAULT '0', 
 	"CODE_MODULE" VARCHAR2(21 BYTE)
    ) SEGMENT CREATION IMMEDIATE 
-  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
- NOCOMPRESS LOGGING
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
+PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 
+NOCOMPRESS LOGGING
+STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
+BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+TABLESPACE "USERS" ;
 ALTER TABLE "ITEAM"."NOTE" ADD CONSTRAINT "NOTE_PK" PRIMARY KEY ("ID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
-  BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
+USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1
+BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+TABLESPACE "USERS"  ENABLE;
 
 
 
@@ -125,52 +123,54 @@ INSERT INTO "ITEAM"."NOTE" ("ID", "NOTE", "ID_ELEVE", "CODE_MODULE") VALUES (2, 
 DECLARE   
 v_nb PLS_INTEGER; 
 BEGIN   
-    UPDATE "ITEAM"."NOTE" SET "NOTE" = "NOTE" + 1    
-    WHERE "CODE_MODULE" = 'BD' AND "NOTE" < 20;
-    v_nb := SQL%ROWCOUNT;     
-    DBMS_OUTPUT.PUT_LINE(v_nb || ' note(s) modifiée(s)');   ROLLBACK;                 
+   UPDATE "ITEAM"."NOTE" SET "NOTE" = "NOTE" + 1    
+   WHERE "CODE_MODULE" = 'BD' AND "NOTE" < 20;
+   v_nb := SQL%ROWCOUNT;     
+   DBMS_OUTPUT.PUT_LINE(v_nb || ' note(s) modifiée(s)');   ROLLBACK;                 
 END; 
 / 
 
 DECLARE 
-    v_note NUMBER := 13.5;
-    v_res  VARCHAR2(20);
-    v_res0  VARCHAR2(20);
+   v_note NUMBER := 13.5;
+   v_res  VARCHAR2(20);
+   v_res0  VARCHAR2(20);
 BEGIN
-    IF v_note >= 16 THEN
-        v_res := 'Très bien';            
-    ELSIF v_note >= 12 THEN 
-        v_res := 'Bien';
-    ELSIF v_note >= 10 THEN
-        v_res := 'Passable';
-    ELSE 
-        v_res := 'Ajourné';
-    END IF;
+   IF v_note >= 16 THEN
+      v_res := 'Très bien';            
+   ELSIF v_note >= 12 THEN 
+      v_res := 'Bien';
+   ELSIF v_note >= 10 THEN
+      v_res := 'Passable';
+   ELSE 
+      v_res := 'Ajourné';
+   END IF;
 -- CASE de recherche (searched CASE)
-    v_res0 := CASE              
+   v_res0 := CASE              
             WHEN v_note >= 10 THEN 'Admis' 
             ELSE 'Rattrapage'
-        END;
-    DBMS_OUTPUT.PUT_LINE(v_res0 || ' - ' || v_res);
+      END;
+   DBMS_OUTPUT.PUT_LINE(v_res0 || ' - ' || v_res);
 END;
 / 
 --- LOOP, WHILE, FOR 
 DECLARE
-    i PLS_INTEGER := 1;
+   i PLS_INTEGER := 1;
 BEGIN
-    LOOP EXIT WHEN i > 3;
-        DBMS_OUTPUT.PUT_LINE('LOOP  : ' || i);     i := i + 1;   
-    END LOOP; 
-    i := 1;
-    WHILE i <= 3 LOOP
-        DBMS_OUTPUT.PUT_LINE('WHILE : ' || i);     i := i + 1;
-    END LOOP; 
-    -- FOR (le compteur est déclaré implicitement)
-    FOR k IN 1..3 LOOP
-        DBMS_OUTPUT.PUT_LINE('FOR   : ' || k);
-    END LOOP;
-    FOR k IN REVERSE 1..3 LOOP 
-        DBMS_OUTPUT.PUT_LINE('REVERSE : ' || k);  
-    END LOOP;
+   LOOP EXIT WHEN i > 3;
+      DBMS_OUTPUT.PUT_LINE('LOOP  : ' || i);    
+      i := i + 1;   
+   END LOOP; 
+   i := 1;
+   WHILE i <= 3 LOOP
+      DBMS_OUTPUT.PUT_LINE('WHILE : ' || i);     
+      i := i + 1;
+   END LOOP; 
+   -- FOR (le compteur est déclaré implicitement)
+   FOR k IN 1..3 LOOP
+      DBMS_OUTPUT.PUT_LINE('FOR   : ' || k);
+   END LOOP;
+   FOR k IN REVERSE 1..3 LOOP 
+      DBMS_OUTPUT.PUT_LINE('REVERSE : ' || k);  
+   END LOOP;
 END;
 / 
