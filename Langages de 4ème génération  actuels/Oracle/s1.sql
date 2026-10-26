@@ -18,10 +18,7 @@ insert into etudiant (
    "ID",
    "NOM",
    "PRENOM"
-) values
-   ( 1,
-     'Dupont',
-     'Jean' );
+) values( 1,'Dupont','Jean');
 
 declare
    v_nom    "ITEAM".etudiant.nom%type;
@@ -30,8 +27,8 @@ begin
    select nom,prenom into
       v_nom,
       v_prenom
-     from "ITEAM".etudiant
-    where "ITEAM".etudiant.id = 1;
+   from "ITEAM".etudiant
+   where "ITEAM".etudiant.id = 1;
    dbms_output.put_line('Étudiant : '
                         || v_prenom
                         || ' ' || v_nom);
