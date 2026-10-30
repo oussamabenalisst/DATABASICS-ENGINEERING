@@ -39,7 +39,14 @@ insert into employe (
      'Informatique' );
 
 
-/*ex 3*/
+/*ex 3
+
+Exercice 3 — Procédure 
+Créer une procédure augmenter_salaire(p_id, p_taux) qui augmente le salaire de l’employé p_id du 
+pourcentage p_taux. Si aucun employé n’est modifié, signaler l’erreur avec RAISE_APPLICATION_ERROR. 
+Tester avec l’employé 1 et un taux de 10 %
+
+*/
 create or replace procedure augmenter_salaire (
    p_id   in employe.id_employe%type,
    p_taux in numeric
@@ -70,7 +77,13 @@ exception
       dbms_output.put_line('Erreur lors de la mise à jour du salaire : ' || sqlerrm);
 end augmenter_salaire;
 
-/*ex4*/
+/*ex4
+
+Exercice 4 — Fonction 
+Créer une fonction prime_annuelle(p_salaire) qui retourne 5 % du salaire mensuel multiplié par 12. Appeler la 
+fonction pour un salaire de 2200.
+
+*/
 create or replace function prime_annuelle (
    p_salaire in employe.salaire%type
 ) return numeric is
@@ -88,7 +101,14 @@ begin
 end;
 /
 
-/* ex1*/
+/* ex1
+
+Exercice 1 — Bloc anonyme 
+Écrire un bloc PL/SQL qui déclare une variable v_moyenne, calcule la moyenne des salaires de la table 
+employe avec SELECT AVG(salaire) INTO ..., puis affiche la moyenne avec DBMS_OUTPUT.PUT_LINE. Indiquer 
+comment activer l’affichage dans l’outil.
+
+*/
 declare
    v_moyenne numeric(
       10,
