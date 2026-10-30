@@ -70,6 +70,14 @@ exception
       dbms_output.put_line('Erreur lors de la mise à jour du salaire : ' || sqlerrm);
 end augmenter_salaire;
 
+/*ex4*/
+create or replace function prime_annuelle (
+   p_salaire in employe.salaire%type
+) return numeric is
+begin
+   return p_salaire * 0.05 * 12;
+end prime_annuelle;
+
 /* ex1*/
 declare
    v_moyenne numeric(
