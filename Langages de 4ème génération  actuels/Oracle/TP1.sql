@@ -77,6 +77,16 @@ create or replace function prime_annuelle (
 begin
    return p_salaire * 0.05 * 12;
 end prime_annuelle;
+/
+
+
+declare
+   v_salaire employe.salaire%type;
+begin
+   v_salaire := prime_annuelle(2200);
+   dbms_output.put_line('La prime annuelle pour un salaire de 2200 est : ' || v_salaire);
+end;
+/
 
 /* ex1*/
 declare
