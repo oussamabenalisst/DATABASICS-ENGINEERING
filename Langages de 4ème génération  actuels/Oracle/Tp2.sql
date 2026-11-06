@@ -245,3 +245,24 @@ exception
       print('Erreur SQL : ' || SQLCODE || ' - ' || SQLERRM);
 end;
 /
+
+/*
+Exercice 6 — DML et SQL%ROWCOUNT ★★
+Augmenter de 3 % les salaires des employés d'un département donné. Afficher « n salaire(s)
+augmenté(s) » ou « Aucun employé modifié », puis annuler la modification par ROLLBACK. Tester
+avec les départements 10 et 40.
+• Question : un UPDATE qui ne modifie aucune ligne lève-t-il NO_DATA_FOUND ?
+*/
+
+begin
+    update employe
+       set salaire = salaire * 1.03
+    where id_dept = 10;
+    if SQL%ROWCOUNT = 0 then
+        print('Aucun employé modifié');
+    else
+        print(SQL%ROWCOUNT || ' salaire(s) augmenté(s)');
+    end if;
+    rollback;
+end;
+/
