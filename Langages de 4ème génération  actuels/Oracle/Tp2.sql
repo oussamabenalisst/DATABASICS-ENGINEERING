@@ -144,3 +144,45 @@ begin
    printf('Salaire annuel : ' || ligne_emp.salaire * 12);
 end;
 /
+
+/*
+Exercice 3 — IF / ELSIF et CASE ★
+• a) Lire le salaire de l'employé n° 3 et déterminer sa catégorie : « Inconnu » si le salaire est
+NULL, « Junior » s'il est inférieur à 2000, « Confirmé » s'il est inférieur à 3000, « Senior »
+sinon. Utiliser IF / ELSIF.
+• b) Avec une expression CASE, déterminer le taux de prime selon la catégorie (Junior 5 %,
+Confirmé 8 %, Senior 10 %, 0 sinon) et afficher la catégorie et le montant de la prime.
+• Question : pourquoi faut-il tester IS NULL en premier ?
+*/
+
+declare
+   v_salaire employe.salaire%type;
+   v_categorie varchar2(20);
+   v_prime numeric(8,2);
+begin
+   select salaire
+     into v_salaire
+     from employe
+    where id_employe = 3;
+    if v_salaire is null then
+      v_categorie := 'Inconnu';
+    elsif v_salaire <2000 then
+        v_categorie:="Junior";
+    elsif v_salaire <3000 then
+        v_categorie:="Confirmé";
+    else 
+        v_categorie:="Senior";
+    case v_categorie
+        when 'Junior' then
+            v_prime := v_salaire * 0.05;
+        when 'Confirmé' then
+            v_prime := v_salaire * 0.08;
+        when 'Senior' then
+            v_prime := v_salaire * 0.10;
+        else
+            v_prime := 0;
+    end case;
+    printf('Catégorie : ' || v_categorie);
+    printf('Montant de la prime : ' || v_prime);
+end;
+/
