@@ -186,3 +186,33 @@ begin
     printf('Montant de la prime : ' || v_prime);
 end;
 /
+
+/*
+Exercice 4 — Les trois boucles ★★
+• a) WHILE : un salaire de 2200 augmente de 5 % chaque année. Combien d'années faut-il
+pour qu'il dépasse strictement 3000 ? Afficher le nombre d'années et le salaire atteint
+(arrondi à 2 décimales).
+• b) Réécrire la question a) avec LOOP … EXIT WHEN.
+• c) Avec FOR … REVERSE, afficher un compte à rebours « Départ dans 5 » … « Départ dans 1
+».
+*/
+
+declare
+   v_salaire employe.salaire%type := 2200;
+   v_annees number := 0;
+begin
+    while v_salaire <= 3000 loop
+        v_salaire := v_salaire * 1.05;
+        v_annees := v_annees + 1;
+    end loop;
+    printf('Nombre d''années : ' || v_annees);
+    printf('Salaire atteint : ' || round(v_salaire, 2));
+    v_salaire := 2200;
+    v_annees := 0;
+    loop
+        v_salaire := v_salaire * 1.05;
+        v_annees := v_annees + 1;
+        exit when v_salaire > 3000;
+    end loop;
+end;
+/
