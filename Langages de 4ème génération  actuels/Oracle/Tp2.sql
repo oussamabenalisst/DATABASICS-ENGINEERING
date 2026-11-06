@@ -119,3 +119,28 @@ begin
           || ' - salaire : ' || v_salaire);
 end;
 
+/*
+Exercice 2 — %ROWTYPE et constante ★
+Récupérer toute la ligne de l'employé n° 4 dans une variable de type employe%ROWTYPE. Afficher
+son nom complet, son poste, sa date d'embauche au format JJ/MM/AAAA et son salaire annuel,
+calculé avec une constante c_nb_mois valant 12.
+*/
+
+declare
+   ligne_emp employe%rowtype;
+begin
+   select *
+     into ligne_emp
+     from employe
+    where id_employe = 4;
+   printf('Nom complet : '
+          || ligne_emp.prenom
+          || ' ' || ligne_emp.nom);
+   printf('Poste : ' || ligne_emp.poste);
+   printf('Date d''embauche : ' || to_char(
+      ligne_emp.date_embauche,
+      'DD/MM/YYYY'
+   ));
+   printf('Salaire annuel : ' || ligne_emp.salaire * 12);
+end;
+/
