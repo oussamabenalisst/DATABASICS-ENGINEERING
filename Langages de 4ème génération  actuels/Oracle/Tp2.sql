@@ -113,10 +113,10 @@ begin
     where id_employe = 1;
 
    print('Employé : '
-          || v_prenom
-          || ' '
-          || v_nom
-          || ' - salaire : ' || v_salaire);
+         || v_prenom
+         || ' '
+         || v_nom
+         || ' - salaire : ' || v_salaire);
 end;
 
 /*
@@ -134,8 +134,8 @@ begin
      from employe
     where id_employe = 4;
    print('Nom complet : '
-          || ligne_emp.prenom
-          || ' ' || ligne_emp.nom);
+         || ligne_emp.prenom
+         || ' ' || ligne_emp.nom);
    print('Poste : ' || ligne_emp.poste);
    print('Date d''embauche : ' || to_char(
       ligne_emp.date_embauche,
@@ -157,33 +157,40 @@ Confirmé 8 %, Senior 10 %, 0 sinon) et afficher la catégorie et le montant de 
 
 declare
    v_salaire employe.salaire%type;
-   v_categorie varchar2(20);
-   v_prime numeric(8,2);
+   v_cat     varchar2(20);
+   v_taux    number(
+      3,
+      2
+   );
 begin
    select salaire
      into v_salaire
      from employe
     where id_employe = 3;
-    if v_salaire is null then
-      v_categorie := 'Inconnu';
-    elsif v_salaire <2000 then
-        v_categorie:="Junior";
-    elsif v_salaire <3000 then
-        v_categorie:="Confirmé";
-    else 
-        v_categorie:="Senior";
-    case v_categorie
-        when 'Junior' then
-            v_prime := v_salaire * 0.05;
-        when 'Confirmé' then
-            v_prime := v_salaire * 0.08;
-        when 'Senior' then
-            v_prime := v_salaire * 0.10;
-        else
-            v_prime := 0;
-    end case;
-    print('Catégorie : ' || v_categorie);
-    print('Montant de la prime : ' || v_prime);
+-- a) IF / ELSIF
+   if v_salaire is null then
+      v_cat := 'Inconnu';
+   elsif v_salaire < 2000 then
+      v_cat := 'Junior';
+   elsif v_salaire < 3000 then
+      v_cat := 'Confirmé';
+   else
+      v_cat := 'Senior';
+   end if;
+-- b) CASE simple (sur une valeur)
+   v_taux :=
+      case v_cat
+         when 'Junior'   then
+            0.05
+         when 'Confirmé' then
+            0.08
+         when 'Senior'   then
+            0.10
+         else
+            0
+      end;
+   print('Catégorie : ' || v_cat);
+   print('Prime : ' || v_salaire * v_taux);
 end;
 /
 
@@ -199,23 +206,29 @@ pour qu'il dépasse strictement 3000 ? Afficher le nombre d'années et le salair
 
 declare
    v_salaire employe.salaire%type := 2200;
-   v_annees number := 0;
+   v_annees  number := 0;
 begin
-    while v_salaire <= 3000 loop
-        v_salaire := v_salaire * 1.05;
-        v_annees := v_annees + 1;
-    end loop;
-    print('Nombre d''années : ' || v_annees);
-    print('Salaire atteint : ' || round(v_salaire, 2));
-    v_salaire := 2200;
-    v_annees := 0;
-    loop
-        v_salaire := v_salaire * 1.05;
-        v_annees := v_annees + 1;
-        exit when v_salaire > 3000;
-    end loop;
-    print('Nombre d''années : ' || v_annees);
-    print('Salaire atteint : ' || round(v_salaire, 2));
+   while v_salaire <= 3000 loop
+      v_salaire := v_salaire * 1.05;
+      v_annees := v_annees + 1;
+   end loop;
+   print('Nombre d''années : ' || v_annees);
+   print('Salaire atteint : ' || round(
+      v_salaire,
+      2
+   ));
+   v_salaire := 2200;
+   v_annees := 0;
+   loop
+      v_salaire := v_salaire * 1.05;
+      v_annees := v_annees + 1;
+      exit when v_salaire > 3000;
+   end loop;
+   print('Nombre d''années : ' || v_annees);
+   print('Salaire atteint : ' || round(
+      v_salaire,
+      2
+   ));
 end;
 /
 
@@ -235,14 +248,18 @@ begin
      into v_nom
      from employe
     where id_dept = v_id_dept;
-   print('Nom de l''employé du département ' || v_id_dept || ' : ' || v_nom);
+   print('Nom de l''employé du département '
+         || v_id_dept
+         || ' : ' || v_nom);
 exception
-   when NO_DATA_FOUND then
+   when no_data_found then
       print('Aucun employé trouvé pour le département ' || v_id_dept);
-   when TOO_MANY_ROWS then
+   when too_many_rows then
       print('Plusieurs employés trouvés pour le département ' || v_id_dept);
-   when OTHERS then
-      print('Erreur SQL : ' || SQLCODE || ' - ' || SQLERRM);
+   when others then
+      print('Erreur SQL : '
+            || sqlcode
+            || ' - ' || sqlerrm);
 end;
 /
 
@@ -255,15 +272,16 @@ avec les départements 10 et 40.
 */
 
 begin
-    update employe
-       set salaire = salaire * 1.03
+   update employe
+      set
+      salaire = salaire * 1.03
     where id_dept = 10;
-    if SQL%ROWCOUNT = 0 then
-        print('Aucun employé modifié');
-    else
-        print(SQL%ROWCOUNT || ' salaire(s) augmenté(s)');
-    end if;
-    rollback;
+   if sql%rowcount = 0 then
+      print('Aucun employé modifié');
+   else
+      print(sql%rowcount || ' salaire(s) augmenté(s)');
+   end if;
+   rollback;
 end;
 /
 
@@ -275,24 +293,71 @@ lus.
 */
 
 declare
-    numemp integer := 0;
-    cursor emp_cursor is
-        select *
-          from employe
-         where id_dept = 10
-         order by salaire desc;
-    emp_rec emp_cursor%rowtype;
+   numemp  integer := 0;
+   cursor emp_cursor is
+   select *
+     from employe
+    where id_dept = 10
+    order by salaire desc;
+   emp_rec emp_cursor%rowtype;
 begin
-    open emp_cursor;
-    loop
-        fetch emp_cursor into emp_rec;
-        exit when emp_cursor%notfound;
-        numemp := numemp + 1;
-        print('Employé n° ' || numemp || ' : '
-              || emp_rec.prenom || ' ' || emp_rec.nom
-              || ' - salaire : ' || emp_rec.salaire);
-    end loop;
-    close emp_cursor;
-    print('Total de employés : ' || numemp);
+   open emp_cursor;
+   loop
+      fetch emp_cursor into emp_rec;
+      exit when emp_cursor%notfound;
+      numemp := numemp + 1;
+      print('Employé n° '
+            || numemp
+            || ' : '
+            || emp_rec.prenom
+            || ' '
+            || emp_rec.nom
+            || ' - salaire : ' || emp_rec.salaire);
+   end loop;
+   close emp_cursor;
+   print('Total de employés : ' || numemp);
+end;
+/
+
+/*
+Ex8
+*/
+declare
+   cursor c_dept is
+   select id_dept,
+          nom_dept
+     from departement
+    order by id_dept;
+   cursor c_emp (
+      p_dept employe.id_dept%type
+   ) is
+   select nom,
+          prenom,
+          salaire
+     from employe
+    where id_dept = p_dept
+    order by nom;
+   v_total number;
+   v_nb    pls_integer;
+begin
+   for d in c_dept loop -- OPEN / FETCH / CLOSE implicites
+      dbms_output.put_line('== '
+                           || d.nom_dept || ' ==');
+      v_total := 0;
+      v_nb := 0;
+      for e in c_emp(d.id_dept) loop -- curseur paramétré
+         dbms_output.put_line('- '
+                              || e.nom
+                              || ' '
+                              || e.prenom
+                              || ' : ' || e.salaire);
+         v_total := v_total + e.salaire;
+         v_nb := v_nb + 1;
+      end loop;
+      if v_nb = 0 then
+         dbms_output.put_line('(aucun employé)');
+      end if;
+      dbms_output.put_line('Masse salariale : ' || v_total);
+   end loop;
 end;
 /
