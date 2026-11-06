@@ -87,7 +87,7 @@ Employé : Amine Ben Salah - salaire : 2200
 • Question : quel est l'intérêt de employe.nom%TYPE par rapport à VARCHAR2(40) ?
 */
 
-create or replace procedure printf (
+create or replace procedure print (
    ch in varchar
 ) is
 begin
@@ -112,7 +112,7 @@ begin
      from employe
     where id_employe = 1;
 
-   printf('Employé : '
+   print('Employé : '
           || v_prenom
           || ' '
           || v_nom
@@ -133,15 +133,15 @@ begin
      into ligne_emp
      from employe
     where id_employe = 4;
-   printf('Nom complet : '
+   print('Nom complet : '
           || ligne_emp.prenom
           || ' ' || ligne_emp.nom);
-   printf('Poste : ' || ligne_emp.poste);
-   printf('Date d''embauche : ' || to_char(
+   print('Poste : ' || ligne_emp.poste);
+   print('Date d''embauche : ' || to_char(
       ligne_emp.date_embauche,
       'DD/MM/YYYY'
    ));
-   printf('Salaire annuel : ' || ligne_emp.salaire * 12);
+   print('Salaire annuel : ' || ligne_emp.salaire * 12);
 end;
 /
 
@@ -182,8 +182,8 @@ begin
         else
             v_prime := 0;
     end case;
-    printf('Catégorie : ' || v_categorie);
-    printf('Montant de la prime : ' || v_prime);
+    print('Catégorie : ' || v_categorie);
+    print('Montant de la prime : ' || v_prime);
 end;
 /
 
@@ -205,8 +205,8 @@ begin
         v_salaire := v_salaire * 1.05;
         v_annees := v_annees + 1;
     end loop;
-    printf('Nombre d''années : ' || v_annees);
-    printf('Salaire atteint : ' || round(v_salaire, 2));
+    print('Nombre d''années : ' || v_annees);
+    print('Salaire atteint : ' || round(v_salaire, 2));
     v_salaire := 2200;
     v_annees := 0;
     loop
@@ -214,5 +214,34 @@ begin
         v_annees := v_annees + 1;
         exit when v_salaire > 3000;
     end loop;
+    print('Nombre d''années : ' || v_annees);
+    print('Salaire atteint : ' || round(v_salaire, 2));
+end;
+/
+
+/*
+Exercice 5 — SELECT INTO et exceptions prédéfinies ★★
+Écrire un bloc qui lit dans v_nom le nom de l'employé du département v_id_dept et l'affiche. Traiter
+NO_DATA_FOUND, TOO_MANY_ROWS et OTHERS (avec SQLCODE et SQLERRM).
+• Tester avec v_id_dept = 10, puis 30, puis 40. Pour chaque test, indiquer quelle branche est
+exécutée et pourquoi.
+*/
+
+declare
+   v_id_dept number(3) := 10;
+   v_nom     employe.nom%type;
+begin
+   select nom
+     into v_nom
+     from employe
+    where id_dept = v_id_dept;
+   print('Nom de l''employé du département ' || v_id_dept || ' : ' || v_nom);
+exception
+   when NO_DATA_FOUND then
+      print('Aucun employé trouvé pour le département ' || v_id_dept);
+   when TOO_MANY_ROWS then
+      print('Plusieurs employés trouvés pour le département ' || v_id_dept);
+   when OTHERS then
+      print('Erreur SQL : ' || SQLCODE || ' - ' || SQLERRM);
 end;
 /
