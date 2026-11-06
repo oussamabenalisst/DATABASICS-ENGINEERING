@@ -266,3 +266,33 @@ begin
     rollback;
 end;
 /
+
+/*
+Exercice 7 — Curseur explicite ★★
+Avec un curseur explicite (OPEN / FETCH / CLOSE), lister les employés du département 10 par salaire
+décroissant. Numéroter chaque ligne avec %ROWCOUNT et afficher à la fin le nombre total d'employés
+lus.
+*/
+
+declare
+    numemp integer := 0;
+    cursor emp_cursor is
+        select *
+          from employe
+         where id_dept = 10
+         order by salaire desc;
+    emp_rec emp_cursor%rowtype;
+begin
+    open emp_cursor;
+    loop
+        fetch emp_cursor into emp_rec;
+        exit when emp_cursor%notfound;
+        numemp := numemp + 1;
+        print('Employé n° ' || numemp || ' : '
+              || emp_rec.prenom || ' ' || emp_rec.nom
+              || ' - salaire : ' || emp_rec.salaire);
+    end loop;
+    close emp_cursor;
+    print('Total de employés : ' || numemp);
+end;
+/
