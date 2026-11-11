@@ -30,17 +30,6 @@ Les fichiers `.sql` contiennent le code pratique à exécuter dans un SGBD.
 
 ---
 
-## Fichiers PDF (supports de cours)
-
-| Chemin | Description |
-|--------|-------------|
-| `Langages de 4ème génération actuels/Annexe Les fonctions SQL.pdf` | Annexe détaillant les fonctions SQL Oracle (lignes et groupe). |
-| `Langages de 4ème génération actuels/Serie_Exercices_PLSQL (1).pdf` | Série d'exercices PL/SQL. |
-| `Sql Revision/TD1 Révision SQL.pdf` | Énoncé du TD1 de révision SQL. |
-| `Sql Revision/TD2 révision.pdf` | Énoncé du TD2 de révision bases de données. |
-
----
-
 ## Arborescence simplifiée
 
 ```
