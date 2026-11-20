@@ -25,3 +25,23 @@ insert into commande values(1,101,5,"02/10/2026");
 insert into commande values(2,103,2,"05/10/2026");
 insert into commande values(3,104,30,"07/10/2026");
 insert into commande values(4,101,3,"12/10/2026");
+
+
+
+-- EX2
+
+DECLARE
+    prd produit%ROWTYPE;
+BEGIN
+    select * into prd from produit where id_produit = 103;
+    DBMS_OUTPUT.PUT_LINE('Produit: ' || prd.libelle || ', Valeur de stock: ' || prd.prix*prd.stock);
+    res := case 
+        when prd.stock == 0 then 'Stock faible'
+        when prd.stock <10 then "Stock faible"
+        else 'Stock suffisant'
+    end;
+    DBMS_OUTPUT.PUT_LINE('Etat du stock: ' || res);
+END;
+/
+
+
