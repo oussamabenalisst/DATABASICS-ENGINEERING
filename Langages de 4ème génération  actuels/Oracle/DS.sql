@@ -20,3 +20,8 @@ INSERT INTO produit VALUES(103,"écran 24 pouces","informatique",420.00,6);
 INSERT INTO produit VALUES(104,"Cahier A4","Papeterie",3.20,150);
 INSERT INTO produit VALUES(105,"Stylo bleu","Papeterie",0.80,8);
 INSERT INTO produit VALUES(106,"Classeur","Papeterie",6.50,3);
+
+insert into commande values(1,101,5,"02/10/2026");
+insert into commande values(2,103,2,"05/10/2026");
+insert into commande values(3,104,30,"07/10/2026");
+insert into commande values(4,101,3,"12/10/2026");
