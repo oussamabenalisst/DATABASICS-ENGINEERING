@@ -45,3 +45,17 @@ END;
 /
 
 
+-- EX3
+
+--A
+CREATE OR REPLACE FUNCTION valeur_commandes(p_id_produit NUMBER) RETURN NUMBER IS
+res NUMBER;
+BEGIN
+    select p.prix*c.quantite into res from produit p, commande c where p.id_produit = c.id_produit and p.id_produit = p_id_produit;
+    RETURN res;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 0;
+END;
+
+
