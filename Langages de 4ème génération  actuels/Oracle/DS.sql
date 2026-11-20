@@ -58,4 +58,28 @@ EXCEPTION
         RETURN 0;
 END;
 
+--b
+
+CREATE OR REPLACE PROCEDURE passer_commande(p_id_produit NUMBER , p_quantite NUMBER)IS
+
+    p_stock NUMBER;
+
+BEGIN
+    IF (p_quantite is NULL OR p_quantite <= 0) THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Quantité invalide');
+    ELSE
+        select stock into p_stock from produit where id_produit = p_id_produit;
+        if SQL%NOTFOUND THEN
+            RAISE_APPLICATION_ERROR(-20002, 'Produit introuvable');
+        ELSE
+            if p_stock < p_quantite THEN
+                RAISE_APPLICATION_ERROR(-20003, 'Stock insuffisant');
+            ELSE
+                insert into commande(id_commande, id_produit, quantite) values (commande_seq.NEXTVAL, p_id_produit, p_quantite);
+            END IF;
+        END IF;
+    END IF;
+END;
+/
+
 
