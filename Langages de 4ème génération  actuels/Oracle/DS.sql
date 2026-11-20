@@ -63,19 +63,22 @@ END;
 CREATE OR REPLACE PROCEDURE passer_commande(p_id_produit NUMBER , p_quantite NUMBER)IS
 
     p_stock NUMBER;
+    p_libelle VARCHAR(50);
 
 BEGIN
     IF (p_quantite is NULL OR p_quantite <= 0) THEN
         RAISE_APPLICATION_ERROR(-20001, 'Quantité invalide');
     ELSE
-        select stock into p_stock from produit where id_produit = p_id_produit;
+        select stock , libelle into p_stock, p_libelle from produit where id_produit = p_id_produit;
         if SQL%NOTFOUND THEN
-            RAISE_APPLICATION_ERROR(-20002, 'Produit introuvable');
+            RAISE_APPLICATION_ERROR(-20002, 'Produit introuvable libelle: ' || p_libelle || "stock: " || p_stock);
         ELSE
             if p_stock < p_quantite THEN
                 RAISE_APPLICATION_ERROR(-20003, 'Stock insuffisant');
             ELSE
-                insert into commande(id_commande, id_produit, quantite) values (commande_seq.NEXTVAL, p_id_produit, p_quantite);
+                insert into commande values (commande_seq.NEXTVAL, p_id_produit, p_quantite , SYSDATE);
+                update produit set stock = stock - p_quantite where id_produit = p_id_produit;
+                DBMS_OUTPUT.PUT_LINE('Commande engistree : ' || p_quantite || ' exemplaires de ' || p_libelle || "(stock restant: " || (p_stock - p_quantite) || ")");
             END IF;
         END IF;
     END IF;
