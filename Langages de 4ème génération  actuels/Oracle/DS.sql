@@ -13,3 +13,10 @@ CREATE TABLE commande(
     date_cmd DATE DEFAULT SYSDATE,
 
 );
+
+INSERT INTO produit VALUES(101,"clavier USB","informatique",35.00,40);
+INSERT INTO produit VALUES(102,"Souris","informatique",28.00,0);
+INSERT INTO produit VALUES(103,"écran 24 pouces","informatique",420.00,6);
+INSERT INTO produit VALUES(104,"Cahier A4","Papeterie",3.20,150);
+INSERT INTO produit VALUES(105,"Stylo bleu","Papeterie",0.80,8);
+INSERT INTO produit VALUES(106,"Classeur","Papeterie",6.50,3);
